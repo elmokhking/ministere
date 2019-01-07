@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"
+xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8">
+    <title>MJS - Page d'authentification</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css" integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/css/authentification.css}">
+    <link rel="icon"
+      type="image/png"
+      th:href="@{/img/mjsFavicon.png}">
+  </head>
+  <body>
+
+  <div class="page-wrap">
+
+
+    <!-- NAVBAR -->
+
+    <nav class="navbar navbar-expand-sm navbar-dark">
+
+
+        <a href="#" class="navbar-brand ml-5"><img th:src="@{/img/logo.png}" alt="logo" id="nav-logo"></a>
+
+
+    </nav>
+
+
+    <!-- FORMULAIRE D'AUTHENTIFICATION -->
+
+    <div class="container form-container d-flex flex-column justify-content-center align-items-center">
+
+
+
+      <img th:src="@{/img/MjsLogo.png}" alt="ministere" class="d-none d-lg-block">
+      <h3 class="text-center">Gestion de coopération</h3>
+    <div class="col-lg-6 d-flex flex-column align-items-center mt-5">
+      <form th:action="@{/login}" method="POST">
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><i class="fas fa-at"></i>
+        </span>
+        </div>
+           <input class="form-control"  type="email" name="email" aria-label="email" aria-describedby="basic-addon1" placeholder="username">
+      </div>
+      <div class="input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text"><i class="fas fa-lock"></i>
+        </span>
+        </div>
+        <input type="password" name="password" id="" placeholder="password" Aria-label="password" aria-describedby="basic-addon1"  class="form-control">
+      </div>
+      <div class="col-lg-8 col-offset-2 d-flex justify-content-center mt-3 ml-5">
+        <Button class="btn btn-success " type="submit">S'authentifier</Button>
+
+      </div>
+      </form>
+    </div>
+
+  </div>
+
+  <!-- MAIN FOOTER -->
+
+  <footer id="main-footer" class="bg-dark fixed-bottom text-light">
+    <div class="container py-3">
+      <div class="row d-flex justify-content-end mx-1">
+
+          <p>Ministère de la Jeunesse et Sports &copy; 2018</p>
+
+      </div>
+    </div>
+  </footer>
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+  </body>
+</html>

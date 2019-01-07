@@ -1,0 +1,55 @@
+@font-face {
+    font-family: 'javafontregular';
+    src: url('javafontregular.ttf');
+}
+
+@font-face {
+    font-family: 'javafontbold';
+    src: url('javafontbold.ttf');
+}
+
+
+.page-wrap{
+  width: 100%;
+  min-height: 100vh;
+  max-height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 0 auto;
+
+    font-family: 'javafontbold', Arial, serif;
+
+}
+
+
+
+.error-title{
+  background-color: #ef5350;
+  color: white;
+  height: 50px;
+  margin-bottom: 25px;
+  font-family: javafontregular;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.error-message{
+  padding: 20px;
+  background-color: white;
+  color: #b71c1c;
+}
+
+button{
+  font-size: 20px;
+  background-color: #ef5350;
+  color: white;
+  height: 50px;
+  float: right;
+  border: none;
+}
+
+button:hover{
+  background-color: #e53935;
+}

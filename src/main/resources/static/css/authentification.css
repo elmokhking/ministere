@@ -1,0 +1,27 @@
+.form-container{
+  height: 80vh;
+}
+button{
+  display:block;
+  width:80%;
+}
+
+.navbar{
+ background: linear-gradient(to right, rgb(85, 179, 216), #1565c0);
+}
+
+#nav-logo{
+  width: 50px;
+  height: auto;
+}
+
+.register-btn{
+  background-color: RGB(61, 150, 207);
+  color: white;
+}
+
+.register-btn:hover{
+  border: 1px solid RGB(61, 150, 207);
+  background-color: white;
+  color: RGB(61, 150, 207);
+}

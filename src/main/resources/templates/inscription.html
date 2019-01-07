@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>MJS - Nouvel utilisateur</title>
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+	crossorigin="anonymous">
+<link rel="stylesheet"
+	href="https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css">
+<link rel="stylesheet"
+	href="https://use.fontawesome.com/releases/v5.1.1/css/all.css"
+	integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ"
+	crossorigin="anonymous">
+<link rel="stylesheet" type="text/css"
+	th:href="@{css/authentification.css}" />
+</head>
+<body>
+
+	<nav class="navbar navbar-expand-sm navbar-dark">
+
+		<a href="index.html" class="navbar-brand ml-5"><img th:src="@{/img/logo.png}"
+			alt="logo" id="nav-logo"></a>
+		<button class="navbar-toggler" data-toggle="collapse"
+			data-target="#navbarNav">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse justify-content-end"
+			id="navbarNav">
+			<ul class="navbar-nav">
+				<li class="nav-item mx-2"><a class="nav-link text-light"
+					th:href="@{/International}">International</a></li>
+				<li class="nav-item mx-2"><a class="nav-link text-light"
+					th:href="@{/National}">National</a></li>
+				<li sec:authorize="hasAuthority('ADMIN')" class="nav-item mx-2"><a class="nav-link text-light"
+					th:href="@{/user/liste}">Utilisateur</a></li>
+								<li><a th:href="@{/logout}"><i class="fas fa-sign-out-alt fa-2x mt-2 ml-3"></i></a></li>
+				
+					
+			</ul>
+		</div>
+
+	</nav>
+
+	<div
+		class="form-container d-flex justify-content-center align-items-center">
+
+		<form class="col-lg-3 text-center" autocomplete="off" action="#"
+			th:action="@{/registration}" th:object="${user}" method="post">
+			<h2 class="mb-3">Formulaire d'inscription</h2>
+			<span ></span>
+			<div
+				class="alert alert-success alert-dismissible fade show text-center"
+				role="alert" th:if="${successMessage}" th:utext="${successMessage}">
+				
+				<button type="button" class="close" data-dismiss="alert"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="form-group">
+				<div>
+					<label th:if="${#fields.hasErrors('name')}" th:errors="*{name}"
+						class="validation-message"></label> <input type="text"
+						th:field="*{name}" placeholder="Prénom" class="form-control" />
+				</div>
+			</div>
+
+			<div class="form-group pb-3">
+				<div>
+					<label th:if="${#fields.hasErrors('lastName')}"
+						th:errors="*{lastName}" class="validation-message"></label> <input
+						type="text" th:field="*{lastName}" placeholder="Nom"
+						class="form-control" />
+				</div>
+			</div>
+			<div class="form-group pb-3">
+				<div>
+					<select name="role" class="form-control">
+						<option value="ADMIN">Admin</option>
+						<option value="RESPONSABLE">Responsable</option>
+						<option value="VISITEUR">Visiteur</option>
+					</select>
+				</div>
+			</div>
+			<div class="form-group pt-3">
+				<div>
+					<input type="text" th:field="*{email}" placeholder="Email"
+						class="form-control" /> <label
+						th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
+						class="validation-message"></label>
+				</div>
+			</div>
+			<div class="form-group">
+				<div>
+					<input type="password" th:field="*{password}"
+						placeholder="Mot de passe" class="form-control" /> <label
+						th:if="${#fields.hasErrors('password')}" th:errors="*{password}"
+						class="validation-message"></label>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div>
+					<button type="submit" class="btn register-btn btn-md mx-5">Ajouter
+						utilisateur</button>
+				</div>
+			</div>
+
+
+
+		</form>
+
+	</div>
+
+
+
+	<footer id="main-footer" class="bg-dark fixed-bottom text-light">
+		<div class="container py-3">
+			<div class="row d-flex justify-content-end mx-1">
+
+				<p>Ministère de la Jeunesse et Sports &copy; 2018</p>
+
+			</div>
+		</div>
+	</footer>
+
+
+	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+		integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+		integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+		integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+		crossorigin="anonymous"></script>
+	<script type="text/javascript" charset="utf8"
+		src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+	<script type="text/javascript" charset="utf8"
+		src="https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"></script>
+
+
+
+</body>
+</html>

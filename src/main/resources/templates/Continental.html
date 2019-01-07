@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<link rel="stylesheet"
+	href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css"
+	integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB"
+	crossorigin="anonymous">
+<link rel="stylesheet" href="shared.css" th:href="@{/css/shared.css}">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+	rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Merriweather"
+	rel="stylesheet">
+<link rel="stylesheet" type="text/css"
+	href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+	rel="stylesheet">
+<link rel="stylesheet"
+	href="https://use.fontawesome.com/releases/v5.1.0/css/all.css"
+	integrity="sha384-lKuwvrZot6UHsBSfcMvOkWwlCMgc0TaWr+30HWe3a4ltaBwTZhyTEggF5tJv8tbt"
+	crossorigin="anonymous">
+
+<link rel="stylesheet" href="continental.css"
+	th:href="@{/css/continental.css}">
+<title>Document</title>
+</head>
+
+<body>
+
+
+
+	<!--top navbar-->
+
+	<nav class="navbar navbar-expand-sm navbar-light mb-3">
+
+		<a class="navbar-brand ml-5" href="#"> <img
+			th:src="@{/img/logo.png}" alt="logo">
+		</a>
+		<button class="navbar-toggler" data-toggle="collapse"
+			data-target="#navbarNav">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse justify-content-end"
+			id="navbarNav">
+			<ul class="navbar-nav mr-3">
+				<li class="nav-item mx-2"><a class="nav-link text-light"
+					th:href="@{/International}">International</a></li>
+				<li class="nav-item mx-2"><a class="nav-link text-light"
+					th:href="@{/National}">National</a></li>
+				<li sec:authorize="hasAuthority('ADMIN')" class="nav-item mx-2"><a class="nav-link text-light"
+					th:href="@{/user/liste}">Utilisateur</a></li>
+				<li><a th:href="@{/logout}"><i class="fas fa-sign-out-alt fa-2x mt-2 ml-3"></i></a></li>
+				
+
+			</ul>
+		</div>
+
+	</nav>
+
+	<div class="wrapper">
+
+
+		<div class="container-fluid ctn">
+			<div
+				class="d-flex flex-row align-items-center justify-content-center top-ribbon">
+
+
+				<div class="titre col-lg-9">
+					<h2>Coopérations Internationales</h2>
+
+				</div>
+				<div class="d-flex flex-column align-items-end col-lg-2">
+					
+					<div sec:authorize="hasAnyAuthority('ADMIN','RESPONSABLE')" data-toggle="modal" data-target="#filterModal"
+						class="ajouter m-1">
+						<i class="fas fa-filter fa-lg"></i>
+					</div>
+					<div sec:authorize="hasAnyAuthority('ADMIN','RESPONSABLE')" data-toggle="modal" data-target="#addNewModal"
+						class="ajouter m-1">
+						<i class="fas fa-plus fa-lg"></i>
+					</div>
+					<div class="d-flex flex-row">
+					<a type="button" th:href="@{/International/archive}"
+						class="btn btn-md btn-archive px-3 my-3">Archive</a>
+						<button type="button" data-toggle="modal" data-target="#imprimer"
+						class="btn btn-md btn-archive px-3 my-3 ml-2">imprimer</button>
+					</div>
+				</div>
+			</div>
+			<hr>
+
+
+
+			<!--TABLE-->
+			<div
+				class="alert alert-warning alert-dismissible fade show text-center"
+				role="alert" th:if="${count!=0 && count!=null}">
+				Alert! <strong><span th:text="${count}"></span></strong> Document(s)
+				près d'expirer
+				<button type="button" class="close" data-dismiss="alert"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			
+			<div
+				class="alert alert-success alert-dismissible fade show text-center"
+				role="alert" th:if="${param.success}">
+				Document enregistré !
+				<button type="button" class="close" data-dismiss="alert"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			
+			<div
+				class="alert alert-success alert-dismissible fade show text-center"
+				role="alert" th:if="${param.deletedsuccess}">
+				Document supprimé avec succès
+				<button type="button" class="close" data-dismiss="alert"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			
+			<div
+				class="alert alert-danger alert-dismissible fade show text-center"
+				role="alert" th:if="${param.failed}">
+				Document non enregistré ! veillez reessayer
+				<button type="button" class="close" data-dismiss="alert"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			
+			<div
+				class="alert alert-primary alert-dismissible fade show text-center"
+				role="alert" th:if="${param.renouvle}">
+				Document renouvlé
+				<button type="button" class="close" data-dismiss="alert"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			
+			<div
+				class="alert alert-success alert-dismissible fade show text-center"
+				role="alert" th:if="${param.modifier}">
+				Document modifié
+				<button type="button" class="close" data-dismiss="alert"
+					aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="container-fluid">
+				<div class="col-12 tablediv">
+
+
+					<table id="myTable" class="hover" style="width: 100%">
+						<thead>
+							<tr>
+								<th>Nom</th>
+								<th>Continent</th>
+								<th>Pays</th>
+								<th>Date de Signature</th>
+								<th>Date d'Expiration</th>
+								<th>Periode</th>
+								<th>Type</th>
+								<th>Etat</th>
+								<th sec:authorize="hasAnyAuthority('ADMIN','RESPONSABLE')">Action</th>
+
+							</tr>
+						</thead>
+						<tbody>
+
+							<tr th:each="document : ${documents}">
+								<td><a th:text="${document.fileName}"
+									th:href="@{'/International/download/'+${document.fileName}}"></a></td>
+
+								<td th:text="${document.continent}">Tiger Nixon</td>
+								<td th:text="${document.pays}">System Architect</td>
+								<td th:text="${document.dateSignature}">Edinburgh</td>
+								<td th:text="${document.dateExpiration}">61</td>
+								<td th:text="${document.periode}">$320,800</td>
+								<td th:text="${document.type.description}">$320,800</td>
+								<td th:text="${document.etat.description}">$320,800</td>
+								<td sec:authorize="hasAnyAuthority('ADMIN','RESPONSABLE')" class="d-flex justify-content-center"><a
+									th:href="@{'/International/renouvler/'+${document.id}}"
+									onclick='if (!(confirm("êtes vous sûr de vouloir effectuer cette action"))) return false' class="btn btn-outline-success mx-4"><i
+										class="fas fa-sync-alt fa-lg"></i></a>
+										<input  id="modifierAcc" type="hidden" th:value="${document.id}">
+										<button class="btn btn-outline-primary"  data-toggle="modal" data-target="#EditModal"
+										onclick="saveId()"><i
+										class="far fa-edit fa-lg"></i></button>
+										<a th:href="@{'/International/delete/'+${document.id}}"
+									class="btn btn-outline-danger mx-4" onclick='if (!(confirm("êtes vous sûr de vouloir effectuer cette action"))) return false'><i
+										class="far fa-trash-alt fa-lg"></i></a>
+								
+								</td>
+
+							</tr>
+
+						</tbody>
+					</table>
+
+				</div>
+			</div>
+
+
+
+		</div>
+		<!-- footer-->
+
+
+
+
+
+
+
+		<footer class="bg-dark text-light mt-5">
+			<div class="py-2 text-center">
+
+				<p>Ministère de la Jeunesse et Sports &copy; 2018</p>
+
+			</div>
+		</footer>
+
+
+	</div>
+
+
+	<!--MODALS-->
+
+
+	<div class="modal fade text-dark" id="filterModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Recherche avancée</h5>
+					<button class="close" data-dismiss="modal">
+						<span>&times;</span>
+					</button>
+				</div>
+				<form th:action="@{/International/filter}" method="post"
+					th:object="${filter}">
+					<div class="modal-body">
+						<div class="container">
+
+
+
+
+							<div class="row d-flex justify-content-between mx-1">
+								<div class="form-group col-md-6">
+									<label for="">Continent</label> <select class="form-control"
+										th:field="*{continent}" id="continentid"
+										onchange="clickme(continentid,paysid)">
+										<option value="">Continent...</option>
+										<option th:value="Arabe">Pays arabes</option>
+										<option th:value="Afrique">Afrique</option>
+										<option th:value="Europe">Europe</option>
+										<option th:value="Asie">Asie</option>
+										<option th:value="Amérique">Amérique</option>
+									</select>
+								</div>
+								<div class="form-group col-md-6">
+									<label for="">Pays</label> <select class="form-control"
+										id="paysid" th:field="*{pays}">
+										<option value="">Pays...</option>
+									</select>
+								</div>
+							</div>
+							<div class="row d-flex justify-content-between mx-1">
+								<div class="form-group col-md-6">
+									<label for="name">Date signature</label> <input type="date"
+										class="form-control" th:field="*{dateSignature}">
+								</div>
+								<div class="form-group col-md-6">
+									<label for="name">Date expiration</label> <input type="date"
+										class="form-control" th:field="*{dateExpiration}">
+								</div>
+							</div>
+							<div class="row d-flex justify-content-between mx-1">
+								<div class="form-group col-md-6">
+									<label for="name">Etat</label> <select class="form-control"
+										th:field="*{etat}">
+										<option value="">Etat...</option>
+
+										<option
+											th:each="etat : ${T(com.ministere.cooperation.model.International.Etat).values()}"
+											 th:value="${etat}" th:text="${etat.description}"></option>
+									</select>
+								</div>
+								<div class="form-group col-md-6">
+									<label for="name">Type</label> <select class="form-control"
+										th:field="*{type}">
+										<option value="">Type...</option>
+
+										<option
+											th:each="type : ${T(com.ministere.cooperation.model.International.TypeDocumentInter).values()}"
+											th:value="${type}" th:text="${type.description}"></option>
+									</select>
+								</div>
+							</div>
+
+						</div>
+					</div>
+					<div class="modal-footer">
+						<input type="submit" class="btn modal-btn" value="Filtrer">
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+
+
+	<div class="modal fade text-dark" id="addNewModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Nouveau document</h5>
+					<button class="close" data-dismiss="modal">
+						<span>&times;</span>
+					</button>
+				</div>
+				<form action="save" th:action="@{/International/save}" method="post"
+					th:object="${document}" enctype="multipart/form-data">
+					<div class="modal-body">
+						<div class="container">
+
+							<div class="row d-flex justify-content-between mx-1">
+
+
+								<div class="form-group col-md-12">
+									<div class="input-group mb-3">
+
+										<div class="input-group-prepend">
+											<span class="input-group-text"><i
+												class="fas fa-upload"></i></span>
+										</div>
+										<div class="custom-file">
+											<input type="file" name="file" id="inputGroupFile03"
+												aria-describedby="inputGroupFileAddon01"> <label
+												class="custom-file-label" for="inputGroupFile03">Choisir
+												un fichier</label>
+										</div>
+									</div>
+								</div>
+
+								<div class="form-group col-md-6">
+									<label for="name">Type</label> <select class="form-control"
+										th:field="*{type}" onchange="AccordId()" id="typeid">
+										<option value="">Type...</option>
+
+										<option
+											th:each="type : ${T(com.ministere.cooperation.model.International.TypeDocumentInter).values()}"
+											th:value="${type}" th:text="${type.description}"></option>
+									</select>
+								</div>
+								
+								
+								<div class="form-group col-md-6">
+									<label for="name">Accord</label> <select class="form-control" id="input"
+										name="accord" disabled="disabled">
+										<option value="">Accord...</option>
+
+										<option
+											th:each="doc : ${documents}"
+											 th:if="${doc.type == T(com.ministere.cooperation.model.International.TypeDocumentInter).ACCORD}"	th:value="${doc.id}" th:text="${doc.fileName}"></option>
+									</select>
+								</div>
+							</div>
+							<div class="row d-flex justify-content-between mx-1">
+								<div class="form-group col-md-6">
+									<label for="">Continent</label> <select class="form-control"
+										th:field="*{continent}" id="continent"
+										onchange="clickme(continent,pays)">
+										<option value=" ">Continent...</option>
+										<option th:value="Arabe">Pays arabes</option>
+										<option th:value="Afrique">Afrique</option>
+										<option th:value="Europe">Europe</option>
+										<option th:value="Asie">Asie</option>
+										<option th:value="Amérique">Amérique</option>
+										<option th:value="Autre">Autre</option>
+									</select>
+								</div>
+								<div class="form-group col-md-6">
+									<label for="">Pays</label> <select class="form-control"
+										id="pays" th:field="*{pays}">
+										<option value="">Pays...</option>
+									</select>
+									<input type="text" name="autre" id="autree">
+								</div>
+								
+							</div>
+							<div class="row d-flex justify-content-between mx-1">
+								<div class="form-group col-md-6">
+									<label for="name">Date signature</label> <input type="date"
+										class="form-control selector" placeholder="Date Signature"
+										id="date-signature" th:field="*{dateSignature}">
+								</div>
+								<div class="form-group col-md-6">
+									<label for="name">Date expiration</label> <input type="date"
+										class="form-control selector " placeholder="Date Expiration"
+										id="date-expiration" th:field="*{dateExpiration}"
+										onkeydown="return false">
+								</div>
+							</div>
+						</div>
+
+					</div>
+					<div class="modal-footer">
+						<input type="submit" class="btn modal-btn" value="Ajouter">
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+
+
+
+
+
+
+
+
+
+	<div class="modal fade text-dark" id="EditModal">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Modifier le fichier</h5>
+					<button class="close" data-dismiss="modal">
+						<span>&times;</span>
+					</button>
+				</div>
+				<form action="modifier" th:action="@{/International/modifier}" method="post" enctype="multipart/form-data">
+					<div class="modal-body">
+						<div class="container">
+							<input type="hidden" name="idModif" id="idEdit" value="">
+							<div class="row d-flex justify-content-between mx-1">
+
+
+								<div class="form-group col-md-12">
+									<div class="input-group mb-3">
+
+										<div class="input-group-prepend">
+											<span class="input-group-text"><i
+												class="fas fa-upload"></i></span>
+										</div>
+										<div class="custom-file">
+											<input type="file" name="file" id="inputGroupFile02"
+												aria-describedby="inputGroupFileAddon01"> <label
+												class="custom-file-label" for="inputGroupFile02">Choisir
+												un fichier</label>
+										</div>
+									</div>
+								</div>
+						</div>
+					</div>
+					</div>
+					<div class="modal-footer">
+						<input type="submit" class="btn modal-btn" value="Ajouter">
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="modal fade text-dark" id="imprimer">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title">Imprimer</h5>
+					<button class="close" data-dismiss="modal">
+						<span>&times;</span>
+					</button>
+				</div>
+				<form action="modifier" th:action="@{/International/pdfreport}" method="post">
+					<div class="modal-body">
+						<div class="container">
+							
+							<div class="row d-flex justify-content-between mx-1">
+
+
+								<div class="form-group col-md-12">
+									<div class="input-group mb-3">
+
+										<div>date signature entre
+										<select id="annee1" name="annee1">
+											
+										</select>
+										 et le 
+										 <select id="annee2" name="annee2">
+											
+										</select>
+										</div>
+										
+									</div>
+								</div>
+						</div>
+					</div>
+					</div>
+					<div class="modal-footer">
+						<input type="submit" class="btn modal-btn" value="Imprimer">
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+
+
+
+	<!--script for bootstrap-->
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+		integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"
+		integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+		crossorigin="anonymous"></script>
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"
+		integrity="sha384-smHYKdLADwkXOn1EmN1qk/HfnUcbVRZyYmZ4qpPea6sjB/pTJ0euyQp0Mk8ck+5T"
+		crossorigin="anonymous"></script>
+	<script type="text/javascript" charset="utf8"
+		src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.js"></script>
+
+
+	<script>
+		$(document)
+				.ready(
+						function() {
+							var select1 = document.getElementById("annee1");
+							var select2 = document.getElementById("annee2");
+
+						      for (i=1980;i<2050;i++) {
+						        select1.options.add(new Option(i,i));
+						        select2.options.add(new Option(i,i));
+
+						      }
+							$('#autree').hide();
+
+							$('#myTable')
+									.DataTable(
+											{
+												language : {
+													processing : "Traitement en cours...",
+													search : "Rechercher&nbsp;:",
+													lengthMenu : "Afficher _MENU_ &eacute;l&eacute;ments",
+													info : "Affichage de l'&eacute;lement _START_ &agrave; _END_ sur _TOTAL_ &eacute;l&eacute;ments",
+													infoEmpty : "Affichage de l'&eacute;lement 0 &agrave; 0 sur 0 &eacute;l&eacute;ments",
+													infoFiltered : "(filtr&eacute; de _MAX_ &eacute;l&eacute;ments au total)",
+													infoPostFix : "",
+													loadingRecords : "Chargement en cours...",
+													zeroRecords : "Aucun &eacute;l&eacute;ment &agrave; afficher",
+													emptyTable : "Aucune donnée disponible dans le tableau",
+													paginate : {
+														first : "Premier",
+														previous : "Pr&eacute;c&eacute;dent",
+														next : "Suivant",
+														last : "Dernier"
+													},
+													aria : {
+														sortAscending : ": activer pour trier la colonne par ordre croissant",
+														sortDescending : ": activer pour trier la colonne par ordre décroissant"
+													}
+												}
+											});
+						});
+
+		var mam = {
+			"Arabe" : {
+				"ma" : "Maroc",
+				"dz" : "Algérie",
+				"bh" : "Bahrein",
+				"ae" : "Emirates Arabes Unies",
+				"eg" : "Egypte",
+				"iq" : "Irak",
+				"go" : "Jordanie",
+				"kw" : "Kuwait",
+				"lb" : "Liban",
+				"ly" : "Lybie",
+				"mr" : "Mauritanie",
+				"ps" : "Palestine",
+				"qa" : "Qatar",
+				"sy" : "Syrie",
+				"sa" : "Arabie Saudite",
+				"sd" : "Sudan",
+				"om" : "Oman",
+				"tn" : "Tunisie",
+				"ye" : "Yemen"
+			},
+			"Afrique" : {
+				"za" : "Afrique du Sud",
+				"ao" : "Angola",
+				"cf" : "Afrique Centrale",
+				"bg" : "Benin",
+				"beng" : "Bengale",
+				"bf" : "Burkina Faso",
+				"cn" : "Cameroun",
+				"cd" : "Congo",
+				"ci" : "Côte d'Ivoire",
+				"dj" : "Djibouti",
+				"ga" : "Gabon",
+				"gm" : "Gambie",
+				"gw" : "Guinée-Bissau",
+				"gq" : "Guinée Equatoriale",
+				"gn" : "Guinée Konakri",
+				"ke" : "Kenya",
+				"lr" : "Liberia",
+				"ml" : "Mali",
+				"mz" : "Mozambique",
+				"ne" : "Niger",
+				"ng" : "Nigeria"
+			},
+			"Europe" : {
+				"al" : "Albanie",
+				"de" : "Allemagne",
+				"and" : "Andalousie",
+				"autr" : "Autriche",
+				"be" : "Belgique",
+				"bg" : "Bulgarie",
+				"cat" : "Catalogne",
+				"dk" : "Danemark",
+				"es" : "Espagne",
+				"fr" : "France",
+				"fi" : "Finlande",
+				"gr" : "Grèce",
+				"hu" : "Hongrie",
+				"it" : "Italie",
+				"ie" : "Irlande",
+				"mt" : "Malte",
+				"no" : "Norvège",
+				"pt" : "Portugal",
+				"pol" : "Polognie",
+				"Ro" : "Roumanie",
+				"ru" : "Russie",
+				"se" : "Suède",
+				"ch" : "Suisse",
+				"si" : "Slovénie",
+				"rs" : "Serbie",
+				"tr" : "Turquie",
+				"tch" : "Tchèque",
+				"ua" : "Ukraine",
+				"you" : "Yougoslavie"
+			},
+			"Asie" : {
+				"az" : "Azerbaïdjan",
+				"bd" : "Bangladesh",
+				"cn" : "Chine",
+				"id" : "Indonésie",
+				"ir" : "Iran",
+				"jp" : "Japon",
+				"my" : "Malaisie",
+				"pk" : "Pakistan",
+				"vu" : "Vanuatu",
+				"vn" : "Vietnam"
+			},
+			"Amérique" : {
+				"ar" : "Argentine",
+				"br" : "Brésil",
+				"ca" : "Canada",
+				"cl" : "Chili",
+				"ht" : "Heiti",
+				"mx" : "Mexique",
+				"py" : "Paraguay",
+				"pe" : "Péru",
+				"slu" : "Saint Louis",
+				"sv" : "Salvador",
+				"us" : "USA",
+				"ve" : "Venezuela"
+			},
+			"Autre" :{
+				
+			},
+		};
+		function clickme(continent, pays) {
+
+			var valeur = continent.value;
+			if(valeur == "Autre"){
+				$('#pays').hide();
+				$('#autree').show();
+			}
+			else{
+				$('#autree').hide();
+				$('#pays').show();
+
+			}
+			var k = 0;
+			console.log(pays.length);
+			for ( var cle in mam) {
+				if (cle == valeur) {
+					k = 1;
+					var p = pays.length;
+
+					for (x in pays) {
+						pays.remove(0);
+					}
+					for ( var j in mam[cle])
+						pays.options.add(new Option(mam[cle][j], mam[cle][j]));
+				}
+			}
+			if (k == 0) {
+				for (x in pays) {
+					pays.remove(0);
+				}
+			}
+
+		}
+		$('#inputGroupFile02').on('change', function() {
+			//get the file name
+			var fileName = $(this).val();
+			//replace the "Choose a file" label
+			$(this).next('.custom-file-label').html(fileName);
+		})
+		$('#inputGroupFile03').on('change', function() {
+			//get the file name
+			var fileName = $(this).val();
+			//replace the "Choose a file" label
+			$(this).next('.custom-file-label').html(fileName);
+		})
+		
+		function AccordId(){
+			if($("#typeid").val()=='PROG')
+				$("#input").prop('disabled', false);
+			else
+				$("#input").prop('disabled', true);
+		}
+		
+		
+		function saveId(){
+	    	var id=$('#modifierAcc').val();
+	    	$('#idEdit').val(id);
+		    }
+		function verifier() {
+		    if (!(confirm("êtes vous sûr de vouloir effectuer cette action"))) return false;
+		}
+		
+	</script>
+
+</body>
+
+</html>

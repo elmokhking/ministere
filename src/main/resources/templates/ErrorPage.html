@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr"
+xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" th:href="@{/css/ErrorPage.css}" />
+    <title>Error!</title>
+  </head>
+  <body>
+    <div class="page-wrap">
+
+
+  <div class="error-message">
+    <div class="error-title">
+      <h1>Authorisation non accordée...</h1>
+    </div>
+    <div class="error-text">
+      Vous n'avez pas  le privilège pour consulter cette page
+    </div>
+    <div class="error-action">
+	 <a th:href="@{/International}"><button type="button">Retour</button></a>
+    </div>
+  </div>
+
+  </div>
+  </body>
+</html>
