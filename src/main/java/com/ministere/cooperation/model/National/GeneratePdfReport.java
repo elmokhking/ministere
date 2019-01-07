@@ -22,6 +22,7 @@ public class GeneratePdfReport {
 
     public static ByteArrayInputStream citiesReport(List<DocumentNational> cities) {
 
+//petit changement
         Document document = new Document();
         ByteArrayOutputStream out = new ByteArrayOutputStream();
 
